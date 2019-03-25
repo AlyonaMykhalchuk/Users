@@ -10,7 +10,7 @@ import {AuthService} from '../auth.service';
   providers: [UsersService, AuthService]
 })
 export class UserComponent implements OnInit {
-  // типы шаблонов
+  // template types
   @ViewChild('readOnlyTemplate') readOnlyTemplate: TemplateRef<any>;
   @ViewChild('editTemplate') editTemplate: TemplateRef<any>;
 
@@ -36,24 +36,24 @@ export class UserComponent implements OnInit {
       this.auth.logOut();
     }
   }
-  // загрузка пользователей
+  // loading user
   private loadUsers() {
     this.serv.getUsers().subscribe((data: User[]) => {
       this.users = data;
     });
   }
-  // добавление пользователя
+  // adding user
   addUser() {
     this.editedUser = new User(0, '', '',  '' , '');
     this.users.push(this.editedUser);
     this.isNewRecord = true;
   }
 
-  // редактирование пользователя
+  // editing user
   editUser(user: User) {
     this.editedUser = new User(user.id, user.firstname, user.lastname, user.email, user.password);
   }
-  // загружаем один из двух шаблонов
+  // load one of two templates
   loadTemplate(user: User) {
     if (this.editedUser && this.editedUser.id === user.id) {
       return this.editTemplate;
@@ -61,10 +61,10 @@ export class UserComponent implements OnInit {
       return this.readOnlyTemplate;
     }
   }
-  // сохраняем пользователя
+ // saving user
   saveUser() {
     if (this.isNewRecord) {
-      // добавляем пользователя
+      // add a user
       this.serv.createUser(this.editedUser).subscribe(data => {
         this.statusMessage = 'Данные успешно добавлены',
           this.loadUsers();
@@ -72,7 +72,7 @@ export class UserComponent implements OnInit {
       this.isNewRecord = false;
       this.editedUser = null;
     } else {
-      // изменяем пользователя
+      // change the user
       this.serv.updateUser(this.editedUser.id, this.editedUser).subscribe(data => {
         this.statusMessage = 'Данные успешно обновлены',
           this.loadUsers();
@@ -80,16 +80,16 @@ export class UserComponent implements OnInit {
       this.editedUser = null;
     }
   }
-  // отмена редактирования
+  // cancel editing
   cancel() {
-    // если отмена при добавлении, удаляем последнюю запись
+    // if canceled when adding, we will delete the last record
     if (this.isNewRecord) {
       this.users.pop();
       this.isNewRecord = false;
     }
     this.editedUser = null;
   }
-  // удаление пользователя
+  // delete user
   deleteUser(user: User) {
     this.serv.deleteUser(user.id).subscribe(data => {
       this.statusMessage = 'Данные успешно удалены',
