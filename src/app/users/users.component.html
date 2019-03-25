@@ -1,0 +1,95 @@
+<nav>
+  <div class="nav-wrapper">
+  <a  class="brand-logo right">FrontEnd Academy InventorSoft</a>
+  <ul id="nav-mobile" class="left hide-on-med-and-down">
+
+  <li><a routerLink="/login" class="btn btn-danger" (click)="changeAuthStatus('logout')">Log out</a></li>
+
+  </ul>
+  </div>
+  </nav>
+<h1>List of users</h1>
+<input type="button" value="Add User" class="btn btn-default" (click)="addUser()" />
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <td>id</td>
+    <td>First name</td>
+    <td>Last name</td>
+    <td>Email</td>
+    <td>Password</td>
+    <td></td>
+    <td></td>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let user of users">
+    <ng-template [ngTemplateOutlet]="loadTemplate(user)"
+                 [ngTemplateOutletContext]="{ $implicit: user}">
+    </ng-template>
+  </tr>
+  </tbody>
+</table>
+<div>{{statusMessage}}</div>
+
+
+<!--шаблон для чтения-->
+<ng-template #readOnlyTemplate let-user>
+  <td>{{user.id}}</td>
+  <td>{{user.firstname}}</td>
+  <td>{{user.lastname}}</td>
+  <td>{{user.email}}</td>
+  <td>{{user.password}}</td>
+
+  <td>
+    <input type="button" value="Delete" (click)="deleteUser(user)" class="btn btn-danger" />
+  </td>
+</ng-template>
+
+<!--шаблон для редактирования-->
+<ng-template #editTemplate>
+  <td>
+    <label>Id</label>
+    <input type="text" [(ngModel)]="editedUser.id" readonly disabled class="form-control" />
+  </td>
+  <td>
+    <label>First name</label>
+
+    <input class="form-control" firstname="firstname" [(ngModel)]="editedUser.firstname" #firstname="ngModel" required />
+    <div [hidden]="firstname.valid || firstname.untouched" class="alert alert-danger">
+      Не указано имя
+    </div>
+  </td>
+  <td>
+    <label>Last name</label>
+
+    <input class="form-control" lastname="lastname" [(ngModel)]="editedUser.lastname" #lastname="ngModel" required />
+    <div [hidden]="lastname.valid || lastname.untouched" class="alert alert-danger">
+      Не указано имя
+    </div>
+  </td>
+  <td>
+    <label>Email</label>
+    <input class="form-control" name="email" [(ngModel)]="editedUser.email" #email="ngModel"
+           required pattern="[a-zA-Z_]+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}" />
+    <div [hidden]="email.valid || email.untouched" class="alert alert-danger">
+      Некорректный email
+    </div>
+  </td>
+  <td>
+    <label>Password</label>
+    <input type="text" [(ngModel)]="editedUser.password" class="form-control" #password="ngModel"  required />
+
+    <div [hidden]="password.valid || password.untouched" class="alert alert-danger">
+      Некорректный пароль
+    </div>
+  </td>
+  <td>
+
+    <button [disabled]="firstname.invalid || lastname.invalid || email.invalid || password.invalid"
+            class="btn btn-default" (click)="saveUser()">Save</button>
+  </td>
+  <td>
+    <input type="button" value="Cancel" (click)="cancel()" class="btn btn-warning" />
+  </td>
+</ng-template>
