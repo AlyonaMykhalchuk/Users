@@ -4,28 +4,33 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { UserComponent } from './users/users.component';
 import { LoginComponent } from './login/login.component';
-import {RouterModule, Routes} from '@angular/router';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireStorageModule } from '@angular/fire/storage';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { environment } from '../environments/environment';
+
 import { FormsModule } from '@angular/forms';
 import {UsersService} from './users/users.service';
 import {LoginService} from './login/login.service';
 import {HttpClientModule} from '@angular/common/http';
-import { AdminComponent } from './admin/admin.component';
+import { UserPageComponent } from './user-page/user-page.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {AuthService} from './auth.service';
 import {AuthGuard} from './auth-guard.service';
+import {LoaderComponent} from './shared/spiner/loader.component';
+import {SearchPipe} from './users/search.pipe';
 
 
-const routes: Routes = [
-  { path: '', component: UserComponent },
-  { path: 'login', component: LoginComponent},
-  { path: 'users', component: UserComponent }
-];
+
 @NgModule({
   declarations: [
     AppComponent,
     UserComponent,
     LoginComponent,
-    AdminComponent
+    UserPageComponent,
+    LoaderComponent,
+    SearchPipe
   ],
   imports: [
     BrowserModule,
@@ -33,7 +38,10 @@ const routes: Routes = [
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
-    RouterModule.forRoot(routes)
+    AngularFireModule.initializeApp(environment.firebase, 'my-app-name'),
+    AngularFirestoreModule, // imports firebase/firestore, only needed for database features
+    AngularFireAuthModule, // imports firebase/auth, only needed for auth features,
+    AngularFireStorageModule // imports firebase/storage only needed for storage features
   ],
   providers: [UsersService, LoginService, AuthService, AuthGuard],
   bootstrap: [AppComponent]

@@ -1,18 +1,20 @@
-<nav>
-  <div class="nav-wrapper">
-  <a  class="brand-logo right">FrontEnd Academy InventorSoft</a>
-  <ul id="nav-mobile" class="left hide-on-med-and-down">
+<app-navbar></app-navbar>
 
-  <li><a routerLink="/login" class="btn btn-danger" (click)="changeAuthStatus('logout')">Log out</a></li>
-
-  </ul>
+<div class="row">
+  <div class="input-field col s6">
+    <input  id="first_name"  class="validate" [(ngModel)]="searchStr">
+    <label class="active" for="first_name">Search name</label>
   </div>
-  </nav>
+</div>
+
+
 <h1>List of users</h1>
+
 <input type="button" value="Add User" class="btn btn-default" (click)="addUser()" />
 <table class="table table-striped">
   <thead>
   <tr>
+    <td>View</td>
     <td>id</td>
     <td>First name</td>
     <td>Last name</td>
@@ -23,11 +25,17 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let user of users">
+  <tr *ngFor="let user of users | search: searchStr">
+    <td>
+      <input type="button" value="View user" [routerLink]="['/users', user.id, user.firstname, user.lastname]" class="btn btn-warning" />
+    </td>
     <ng-template [ngTemplateOutlet]="loadTemplate(user)"
                  [ngTemplateOutletContext]="{ $implicit: user}">
+
     </ng-template>
+
   </tr>
+
   </tbody>
 </table>
 <div>{{statusMessage}}</div>
@@ -95,3 +103,4 @@
     <input type="button" value="Cancel" (click)="cancel()" class="btn btn-warning" />
   </td>
 </ng-template>
+

@@ -1,0 +1,11 @@
+
+<nav>
+  <div class="nav-wrapper">
+    <a  class="brand-logo right">FrontEnd Academy InventorSoft</a>
+    <ul id="nav-mobile" class="left hide-on-med-and-down">
+
+      <li><a routerLink="/login" class="btn btn-danger" (click)="logout()" *ngIf="!isLogin">Log out</a></li>
+
+    </ul>
+  </div>
+</nav>

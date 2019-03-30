@@ -1,26 +1,22 @@
-<nav>
-  <div class="nav-wrapper">
-    <a  class="brand-logo right">FrontEnd Academy InventorSoft</a>
-  </div>
-</nav>
-<div class="col-xs-8">
+
+<div class="col-xs-8" >
   <p class="text - xs - center">Log in</p>
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="form-group"
-         [ngClass]="{'hasError':form.get('username').invalid && form.get('username').touched}">
-      <label for="username">Email </label>
+         [ngClass]="{'hasError':form.get('email').invalid && form.get('email').touched}">
+      <label for="email">Email </label>
       <input type="text" class="form-control underlined"
-             id ="username" placeholder="Enter your email"
-             formControlName= "username">
-      <span class="form-help-text" *ngIf="form.get('username').invalid && form.get('username').touched">
-      <span *ngIf="form.get('username')['errors']['required']">  This field  can't be empty </span>
-       <span *ngIf="form.get('username')['errors']['email']">  Enter the correct email </span>
+             id ="email" placeholder="Enter your email"
+             formControlName= "email" [(ngModel)]="email" name="email" ] >
+      <span class="form-help-text" *ngIf="form.get('email').invalid && form.get('email').touched">
+      <span *ngIf="form.get('email')['errors']['required']">  This field  can't be empty </span>
+       <span *ngIf="form.get('email')['errors']['email']">  Enter the correct email </span>
     </span>
     </div>
     <div class="form-group"[ngClass]="{'hasError':form.get('password').invalid && form.get('password').touched}">
       <label for="password">Password </label>
       <input type="password" class="form-control underlined"
-             id ="password" placeholder="Enter your password" formControlName="password">
+             id ="password" placeholder="Enter your password" formControlName="password" [(ngModel)]="password" name="password" >
       <span class="form-help-text" *ngIf="form.get('password').invalid && form.get('password').touched">
       <span *ngIf="form.get('password')['errors']['required']">  This field  can't be empty </span>
        <span *ngIf="form.get('password')['errors']['minlength']">
@@ -29,7 +25,7 @@
     </span>
     </div>
     <div class="form-group">
-      <button type="submit" class="btn btn-block btn-primary"[disabled]="form.invalid" routerLink="/users"(click)="changeAuthStatus('login')">  Login</button>
+      <button type="submit"  class="btn btn-block btn-primary"[disabled]="form.invalid" [routerLink]="'/users'"(click)="changeAuthStatus('login') ">  Login</button>
     </div>
   </form>
 </div>

@@ -18,7 +18,7 @@ export class UserComponent implements OnInit {
   users: Array<User>;
   isNewRecord: boolean;
   statusMessage: string;
-
+  searchStr = '';
   constructor(
     private serv: UsersService,
      private auth: AuthService
@@ -29,13 +29,13 @@ export class UserComponent implements OnInit {
   ngOnInit() {
     this.loadUsers();
   }
-  changeAuthStatus(status: string) {
-    if (status === 'login') {
-      this.auth.logIn();
-    } else {
-      this.auth.logOut();
-    }
-  }
+  // changeAuthStatus(status: string) {
+  //   if (status === 'login') {
+  //     this.auth.login();
+  //   } else {
+  //     this.auth.logOut();
+  //   }
+  // }
   // loading user
   private loadUsers() {
     this.serv.getUsers().subscribe((data: User[]) => {
