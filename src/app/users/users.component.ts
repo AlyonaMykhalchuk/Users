@@ -21,25 +21,18 @@ export class UserComponent implements OnInit {
   searchStr = '';
   constructor(
     private serv: UsersService,
-     private auth: AuthService
   ) {
-    this.users = new Array<User>();
+    this.users = [];
   }
 
   ngOnInit() {
     this.loadUsers();
   }
-  // changeAuthStatus(status: string) {
-  //   if (status === 'login') {
-  //     this.auth.login();
-  //   } else {
-  //     this.auth.logOut();
-  //   }
-  // }
   // loading user
   private loadUsers() {
     this.serv.getUsers().subscribe((data: User[]) => {
       this.users = data;
+
     });
   }
   // adding user
@@ -65,7 +58,7 @@ export class UserComponent implements OnInit {
   saveUser() {
     if (this.isNewRecord) {
       // add a user
-      this.serv.createUser(this.editedUser).subscribe(data => {
+      this.serv.createUser(this.editedUser).then(data => {
         this.statusMessage = 'Данные успешно добавлены',
           this.loadUsers();
       });
@@ -73,7 +66,7 @@ export class UserComponent implements OnInit {
       this.editedUser = null;
     } else {
       // change the user
-      this.serv.updateUser(this.editedUser.id, this.editedUser).subscribe(data => {
+      this.serv.updateUser(this.editedUser.id, this.editedUser).then(data => {
         this.statusMessage = 'Данные успешно обновлены',
           this.loadUsers();
       });
@@ -91,7 +84,7 @@ export class UserComponent implements OnInit {
   }
   // delete user
   deleteUser(user: User) {
-    this.serv.deleteUser(user.id).subscribe(data => {
+    this.serv.deleteUser(user.id).then(data => {
       this.statusMessage = 'Данные успешно удалены',
         this.loadUsers();
     });

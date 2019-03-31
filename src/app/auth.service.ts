@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import 'rxjs/add/operator/map';
+import {map} from 'rxjs/operators';
 @Injectable()
 export class AuthService {
   constructor (
@@ -10,8 +10,8 @@ export class AuthService {
      return this.afAuth.auth.signInWithEmailAndPassword(email, password);
     }
    checkAuth() {
-    return this.afAuth.authState.map(auth => auth);
-  }
+    return this.afAuth.authState.pipe(map(auth => auth));
+   }
   logout () {
     return this.afAuth.auth.signOut();
   }
