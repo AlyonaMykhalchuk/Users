@@ -8,12 +8,12 @@ import {Injectable} from '@angular/core';
 export class AuthGuard implements CanActivate {
   constructor (private auth: AuthService) {}
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean > | Promise<boolean> | boolean {
- return this.auth.isAuth().then((isLoggedIn: boolean) => {
-   if (isLoggedIn) {
-     return true;
-   } else {
-  return false;
-   }
- });
+   return this.auth.isAuth().then((isLoggedIn: boolean) => {
+     if (isLoggedIn) {
+       return true;
+     } else {
+       return false;
+     }
+   });
   }
 }
