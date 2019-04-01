@@ -20,7 +20,6 @@ showSpiner = true;
  ngOnInit () {
   // check auth state
    this.authService.checkAuth().subscribe(auth => {
-     this.showSpiner = false;
      if (auth) {
        this.router.navigate(['/users']);
      }

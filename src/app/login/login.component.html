@@ -27,10 +27,10 @@
 
   <!--</form>-->
 <!--</div>-->
-<app-loader *ngIf="showSpiner"></app-loader>
+
 <div class="container">
   <div class = "row">
-    <div class = "col-md-6 mx-auto">
+    <div class = "center-block">
       <div class = "card">
         <div class="card-body">
           <h1 class = "text-center mb-4 mt-4">
@@ -54,10 +54,11 @@
                      [(ngModel)]="password" name="password"
               required>
             </div>
-
-            <button class="btn btn-primary btn-block"
+            <div class="  center-block">
+            <button class="btn btn-primary btn-blockб center-block"
                     [disabled]="form.invalid"
                     [routerLink]="'/users'">  Login</button>
+              </div>
           </form>
         </div>
       </div>

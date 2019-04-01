@@ -19,6 +19,8 @@ export class UserComponent implements OnInit {
   isNewRecord: boolean;
   statusMessage: string;
   searchStr = '';
+  showSpinner: boolean;
+
   constructor(
     private serv: UsersService,
   ) {
@@ -32,12 +34,12 @@ export class UserComponent implements OnInit {
   private loadUsers() {
     this.serv.getUsers().subscribe((data: User[]) => {
       this.users = data;
-
+      this.showSpinner = false;
     });
   }
   // adding user
   addUser() {
-    this.editedUser = new User(0, '', '',  '' , '');
+    this.editedUser = new User('', '', '',  '' , '');
     this.users.push(this.editedUser);
     this.isNewRecord = true;
   }

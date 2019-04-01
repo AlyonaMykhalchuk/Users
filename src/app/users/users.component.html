@@ -7,7 +7,7 @@
   </div>
 </div>
 
-
+<app-loader *ngIf="showSpinner"></app-loader>
 <h1>List of users</h1>
 
 <input type="button" value="Add User" class="btn btn-default" (click)="addUser()" />
@@ -15,7 +15,7 @@
   <thead>
   <tr>
     <td>View</td>
-    <td>id</td>
+    <!--<td>id</td>-->
     <td>First name</td>
     <td>Last name</td>
     <td>Email</td>
@@ -43,7 +43,7 @@
 
 <!--template for reading-->
 <ng-template #readOnlyTemplate let-user>
-  <td>{{user.id}}</td>
+  <!--<td>{{user.id}}</td>-->
   <td>{{user.firstname}}</td>
   <td>{{user.lastname}}</td>
   <td>{{user.email}}</td>
@@ -58,10 +58,10 @@
 
 <!--template for editing-->
 <ng-template #editTemplate>
-  <td>
-    <label>Id</label>
-    <input type="text" [(ngModel)]="editedUser.id" readonly disabled class="form-control" />
-  </td>
+  <!--<td>-->
+    <!--<label>Id</label>-->
+    <!--<input type="text" [(ngModel)]="editedUser.id" readonly disabled class="form-control" />-->
+  <!--</td>-->
   <td>
     <label>First name</label>
 

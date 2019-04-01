@@ -15,11 +15,11 @@ export class UserPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.id = +this.route.snapshot.params['id'];
+    this.id = this.route.snapshot.params['id'];
     this.id = this.route.snapshot.params['firstname'];
     this.id = this.route.snapshot.params['lastname'];
     this.route.params.subscribe((params: Params) => {
-     this.id = +params ['id'];
+     this.id = params ['id'];
       this.firstname = params ['firstname'];
       this.lastname = params ['lastname'];
     });
