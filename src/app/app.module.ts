@@ -1,31 +1,47 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { AppRoutingModule } from './app-routing.module';
+import {ReactiveFormsModule, FormsModule} from '@angular/forms';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+
+
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireStorageModule } from '@angular/fire/storage';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { environment } from '../environments/environment';
+
 import { AppComponent } from './app.component';
-import { UserComponent } from './users/users.component';
 import { LoginComponent } from './login/login.component';
-import {RouterModule, Routes} from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { UserComponent } from './users/users.component';
+import { UserPageComponent } from './user-page/user-page.component';
+import {NavbarComponent} from './navbar/navbar.component';
+
+
 import {UsersService} from './users/users.service';
-import {LoginService} from './login/login.service';
-import {HttpClientModule} from '@angular/common/http';
-import { AdminComponent } from './admin/admin.component';
-import {ReactiveFormsModule} from '@angular/forms';
 import {AuthService} from './auth.service';
 import {AuthGuard} from './auth-guard.service';
 
+import {SearchPipe} from './users/search.pipe';
+import { AppRoutingModule } from './app-routing.module';
+import {TokenInterceptor} from './interceptor/interceptor.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-const routes: Routes = [
-  { path: '', component: UserComponent },
-  { path: 'login', component: LoginComponent},
-  { path: 'users', component: UserComponent }
-];
+import {PaginationService} from './pagination/pagination.service';
+import {PaginationComponent} from './pagination/pagination.component';
+import {SpinnerComponent} from './shared/spiner.component';
+
+
 @NgModule({
   declarations: [
     AppComponent,
     UserComponent,
     LoginComponent,
-    AdminComponent
+    UserPageComponent,
+    SearchPipe,
+    NavbarComponent,
+    SpinnerComponent,
+    PaginationComponent
+
   ],
   imports: [
     BrowserModule,
@@ -33,9 +49,13 @@ const routes: Routes = [
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
-    RouterModule.forRoot(routes)
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule, // imports firebase/firestore, only needed for database features
+    AngularFireAuthModule, // imports firebase/auth, only needed for auth features,
+    AngularFireStorageModule, BrowserAnimationsModule // imports firebase/storage only needed for storage features
   ],
-  providers: [UsersService, LoginService, AuthService, AuthGuard],
+  providers: [UsersService, AuthService, AuthGuard, PaginationService, TokenInterceptor,
+    {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

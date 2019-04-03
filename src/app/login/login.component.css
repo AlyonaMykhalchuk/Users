@@ -5,4 +5,12 @@ input.ng-touched.ng-invalid {
 input.ng-touched.ng-valid {
   border: solid green 2px;
 }
+.form-group{
+  border-left: 150px;
+  margin-left:150px;
+  padding-left: 150px;
+  border-right: 150px;
+  margin-right:150px;
+  padding-right: 150px;
+}
 

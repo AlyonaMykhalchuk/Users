@@ -1,24 +1,41 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import {Observable} from 'rxjs';
 import {User} from './user';
+import { AngularFirestore, AngularFirestoreCollection} from '@angular/fire/firestore';
+import {map} from 'rxjs/operators';
 
 @Injectable()
 export class UsersService {
+  usersCollection: AngularFirestoreCollection<User>;
+  users: Observable<User[]>;
+  user: Observable<User>;
 
-    private url = 'http://5c8bcb35a0bb650014f03b86.mockapi.io/users';
-    constructor(private http: HttpClient) { }
+  constructor(
+    private afs: AngularFirestore,
+  ) {
+    this.usersCollection = this.afs.collection('users');
+  }
 
-    getUsers() {
-        return this.http.get(this.url);
-    }
+  getUsers() {
+    this.users = this.usersCollection.snapshotChanges().pipe(map(collection => {
+      return collection.map(document => {
+        const data = document.payload.doc.data() as User;
+        data.id = document.payload.doc.id;
+        return data;
+      });
+    }));
+        return this.users;
+      }
 
-    createUser(user: User) {
-        return this.http.post(this.url, user);
-    }
-    updateUser(id: number, user: User) {
-        return this.http.put(this.url + '/' + id, user);
-    }
-    deleteUser(id: number) {
-        return this.http.delete(this.url + '/' + id);
-    }
+  createUser(user: User) {
+    return this.usersCollection.add(Object.assign({}, user));
+  }
+
+  updateUser(id: string, user: User) {
+    return this.usersCollection.doc(id).set(Object.assign({}, user));
+  }
+
+  deleteUser(id: string) {
+    return this.usersCollection.doc(id).delete();
+  }
 }
