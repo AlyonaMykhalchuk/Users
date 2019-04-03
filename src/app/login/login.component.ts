@@ -11,7 +11,7 @@ import {Router} from '@angular/router';
 export class LoginComponent implements OnInit {
   email: string;
   password: string;
-showSpiner = true;
+
 
   constructor (private authService: AuthService,
                private router: Router,

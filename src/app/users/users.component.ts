@@ -3,6 +3,8 @@ import {Component, OnInit} from '@angular/core';
 import {User} from './user';
 import {UsersService} from './users.service';
 import {AuthService} from '../auth.service';
+import {PaginationService} from '../pagination/pagination.service';
+
 
 @Component({
   selector: 'app-users',
@@ -19,28 +21,47 @@ export class UserComponent implements OnInit {
   isNewRecord: boolean;
   statusMessage: string;
   searchStr = '';
-  showSpinner: boolean;
+  pager: any = {};
+  pagedItems: any[];
 
   constructor(
-    private serv: UsersService,
+    private userService: UsersService,
+    private paginationService: PaginationService
   ) {
     this.users = [];
   }
 
   ngOnInit() {
     this.loadUsers();
+
   }
+
   // loading user
   private loadUsers() {
-    this.serv.getUsers().subscribe((data: User[]) => {
+    this.userService.getUsers().subscribe((data: User[]) => {
       this.users = data;
-      this.showSpinner = false;
-    });
+      this.setPage(1);
+     });
   }
+
+  setPage(page: number) {
+    if (page < 1 || page > this.pager.totalPages) {
+      return;
+    }
+    // get pager object from service
+    this.pager = this.paginationService.getPager(this.users.length, page);
+    console.log(this.users.length);
+    console.log('pager:' + this.pager);
+    console.log('pager.pages:' + this.pager.pages);
+    // get current page of items
+    this.pagedItems = this.users.slice(this.pager.startIndex, this.pager.endIndex + 1);
+    console.log('endIndex:' + this.pager.endIndex);
+  }
+
   // adding user
   addUser() {
-    this.editedUser = new User('', '', '',  '' , '');
-    this.users.push(this.editedUser);
+    this.editedUser = new User('', '', '', '', '');
+    this.pagedItems.push(this.editedUser);
     this.isNewRecord = true;
   }
 
@@ -48,6 +69,7 @@ export class UserComponent implements OnInit {
   editUser(user: User) {
     this.editedUser = new User(user.id, user.firstname, user.lastname, user.email, user.password);
   }
+
   // load one of two templates
   loadTemplate(user: User) {
     if (this.editedUser && this.editedUser.id === user.id) {
@@ -56,11 +78,12 @@ export class UserComponent implements OnInit {
       return this.readOnlyTemplate;
     }
   }
- // saving user
+
+  // saving user
   saveUser() {
     if (this.isNewRecord) {
       // add a user
-      this.serv.createUser(this.editedUser).then(data => {
+      this.userService.createUser(this.editedUser).then(data => {
         this.statusMessage = 'Данные успешно добавлены',
           this.loadUsers();
       });
@@ -68,27 +91,32 @@ export class UserComponent implements OnInit {
       this.editedUser = null;
     } else {
       // change the user
-      this.serv.updateUser(this.editedUser.id, this.editedUser).then(data => {
+      this.userService.updateUser(this.editedUser.id, this.editedUser).then(data => {
         this.statusMessage = 'Данные успешно обновлены',
           this.loadUsers();
       });
       this.editedUser = null;
     }
   }
+
   // cancel editing
   cancel() {
     // if canceled when adding, we will delete the last record
     if (this.isNewRecord) {
-      this.users.pop();
+      this.pagedItems.pop();
       this.isNewRecord = false;
     }
     this.editedUser = null;
   }
+
   // delete user
   deleteUser(user: User) {
-    this.serv.deleteUser(user.id).then(data => {
-      this.statusMessage = 'Данные успешно удалены',
+    this.userService.deleteUser(user.id).then(data => {
+      this.statusMessage = 'Данные успешно удалены';
         this.loadUsers();
     });
   }
+
 }
+
+

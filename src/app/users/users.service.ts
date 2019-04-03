@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs';
 import {User} from './user';
-import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument} from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreCollection} from '@angular/fire/firestore';
 import {map} from 'rxjs/operators';
 
 @Injectable()
 export class UsersService {
   usersCollection: AngularFirestoreCollection<User>;
-  userDoc: AngularFirestoreDocument<User>;
   users: Observable<User[]>;
   user: Observable<User>;
 
@@ -25,8 +24,8 @@ export class UsersService {
         return data;
       });
     }));
-    return this.users;
-  }
+        return this.users;
+      }
 
   createUser(user: User) {
     return this.usersCollection.add(Object.assign({}, user));

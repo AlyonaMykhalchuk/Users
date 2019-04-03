@@ -1,106 +1,126 @@
-
-
-<div class="row">
-  <div class="input-field col s6">
-    <input  id="first_name"  class="validate" [(ngModel)]="searchStr">
-    <label class="active" for="first_name">Search name</label>
+<div class="container">
+  <div class="left hide-on-med-and-down">
+    <input type="button" value="Add User" class="btn btn-default" (click)="addUser()"/>
   </div>
-</div>
+  <div class="right hide-on-med-and-down">
+    <div class="input-field col s6">
+      <input id="first_name" class="validate" [(ngModel)]="searchStr">
+      <label class="active" for="first_name">Search name</label>
+    </div>
+  </div>
 
-<app-loader *ngIf="showSpinner"></app-loader>
-<h1>List of users</h1>
+  <h1 class="center-align">List of users</h1>
 
-<input type="button" value="Add User" class="btn btn-default" (click)="addUser()" />
-<table class="table table-striped">
-  <thead>
-  <tr>
-    <td>View</td>
-    <!--<td>id</td>-->
-    <td>First name</td>
-    <td>Last name</td>
-    <td>Email</td>
-    <td>Password</td>
-    <td></td>
-    <td></td>
-  </tr>
-  </thead>
-  <tbody>
-  <tr *ngFor="let user of users | search: searchStr">
+  <div class="container">
+    <ul *ngIf="pager.pages && pager.pages.length" class="pagination">
+      <li [ngClass]="{disabled:pager.currentPage === 1}">
+        <a (click)="setPage(1)">First</a>
+      </li>
+      <li [ngClass]="{disabled:pager.currentPage === 1}">
+        <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+      </li>
+      <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+        <a (click)="setPage(page)">{{page}}</a>
+      </li>
+      <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+        <a (click)="setPage(pager.currentPage + 1)">Next</a>
+      </li>
+      <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+        <a (click)="setPage(pager.totalPages)">Last</a>
+      </li>
+    </ul>
+  </div>
+
+
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <td>View</td>
+      <td>First name</td>
+      <td>Last name</td>
+      <td>Email</td>
+      <td>Password</td>
+      <td></td>
+      <td></td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let user of pagedItems | search: searchStr">
+      <td>
+        <input type="button" value="View user" [routerLink]="['/users', user.id, user.firstname, user.lastname]"
+               class="btn btn-warning"/>
+      </td>
+      <ng-template [ngTemplateOutlet]="loadTemplate(user)"
+                   [ngTemplateOutletContext]="{ $implicit: user}">
+
+      </ng-template>
+
+    </tr>
+
+    </tbody>
+  </table>
+  <div>{{statusMessage}}</div>
+
+
+  <!--template for reading-->
+  <ng-template #readOnlyTemplate let-user>
+    <td>{{user.firstname}}</td>
+    <td>{{user.lastname}}</td>
+    <td>{{user.email}}</td>
+    <td>{{user.password}}</td>
     <td>
-      <input type="button" value="View user" [routerLink]="['/users', user.id, user.firstname, user.lastname]" class="btn btn-warning" />
+      <input type="button" value="Edit" class="btn btn-default" (click)="editUser(user)"/>
     </td>
-    <ng-template [ngTemplateOutlet]="loadTemplate(user)"
-                 [ngTemplateOutletContext]="{ $implicit: user}">
+    <td>
+      <input type="button" value="Delete" (click)="deleteUser(user)" class="btn btn-danger"/>
+    </td>
+  </ng-template>
 
-    </ng-template>
+  <!--template for editing-->
+  <ng-template #editTemplate>
+    <td>
+      <label>First name</label>
 
-  </tr>
+      <input class="form-control" firstname="firstname" [(ngModel)]="editedUser.firstname" #firstname="ngModel"
+             required/>
+      <div [hidden]="firstname.valid || firstname.untouched" class="alert alert-danger">
+        Не указано имя
+      </div>
+    </td>
+    <td>
+      <label>Last name</label>
 
-  </tbody>
-</table>
-<div>{{statusMessage}}</div>
+      <input class="form-control" lastname="lastname" [(ngModel)]="editedUser.lastname" #lastname="ngModel" required/>
+      <div [hidden]="lastname.valid || lastname.untouched" class="alert alert-danger">
+        Не указано имя
+      </div>
+    </td>
+    <td>
+      <label>Email</label>
+      <input class="form-control" name="email" [(ngModel)]="editedUser.email" #email="ngModel"
+             required pattern="[a-zA-Z_]+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}"/>
+      <div [hidden]="email.valid || email.untouched" class="alert alert-danger">
+        Некорректный email
+      </div>
+    </td>
+    <td>
+      <label>Password</label>
+      <input type="text" [(ngModel)]="editedUser.password" class="form-control" #password="ngModel" required/>
 
+      <div [hidden]="password.valid || password.untouched" class="alert alert-danger">
+        Некорректный пароль
+      </div>
+    </td>
+    <td>
 
-<!--template for reading-->
-<ng-template #readOnlyTemplate let-user>
-  <!--<td>{{user.id}}</td>-->
-  <td>{{user.firstname}}</td>
-  <td>{{user.lastname}}</td>
-  <td>{{user.email}}</td>
-  <td>{{user.password}}</td>
-  <td>
-    <input type="button" value="Edit" class="btn btn-default" (click)="editUser(user)" />
-  </td>
-  <td>
-    <input type="button" value="Delete" (click)="deleteUser(user)" class="btn btn-danger" />
-  </td>
-</ng-template>
+      <button [disabled]="firstname.invalid || lastname.invalid || email.invalid || password.invalid"
+              class="btn btn-default" (click)="saveUser()">Save
+      </button>
+    </td>
+    <td>
+      <input type="button" value="Cancel" (click)="cancel()" class="btn btn-warning"/>
+    </td>
+  </ng-template>
 
-<!--template for editing-->
-<ng-template #editTemplate>
-  <!--<td>-->
-    <!--<label>Id</label>-->
-    <!--<input type="text" [(ngModel)]="editedUser.id" readonly disabled class="form-control" />-->
-  <!--</td>-->
-  <td>
-    <label>First name</label>
-
-    <input class="form-control" firstname="firstname" [(ngModel)]="editedUser.firstname" #firstname="ngModel" required />
-    <div [hidden]="firstname.valid || firstname.untouched" class="alert alert-danger">
-      Не указано имя
-    </div>
-  </td>
-  <td>
-    <label>Last name</label>
-
-    <input class="form-control" lastname="lastname" [(ngModel)]="editedUser.lastname" #lastname="ngModel" required />
-    <div [hidden]="lastname.valid || lastname.untouched" class="alert alert-danger">
-      Не указано имя
-    </div>
-  </td>
-  <td>
-    <label>Email</label>
-    <input class="form-control" name="email" [(ngModel)]="editedUser.email" #email="ngModel"
-           required pattern="[a-zA-Z_]+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}" />
-    <div [hidden]="email.valid || email.untouched" class="alert alert-danger">
-      Некорректный email
-    </div>
-  </td>
-  <td>
-    <label>Password</label>
-    <input type="text" [(ngModel)]="editedUser.password" class="form-control" #password="ngModel"  required />
-
-    <div [hidden]="password.valid || password.untouched" class="alert alert-danger">
-      Некорректный пароль
-    </div>
-  </td>
-  <td>
-
-    <button [disabled]="firstname.invalid || lastname.invalid || email.invalid || password.invalid"
-            class="btn btn-default" (click)="saveUser()">Save</button>
-  </td>
-  <td>
-    <input type="button" value="Cancel" (click)="cancel()" class="btn btn-warning" />
-  </td>
-</ng-template>
+</div>
 
