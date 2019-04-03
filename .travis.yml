@@ -1,7 +1,7 @@
-#before_deploy: "echo 'ready?'"
-#language: node_js
-#node_js:
-#- "10"
+before_deploy: "echo 'ready?'"
+language: node_js
+node_js:
+- "10"
 deploy:
   provider: pages
   skip_cleanup: true
