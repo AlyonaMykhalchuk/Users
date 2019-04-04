@@ -25,10 +25,9 @@ import {SearchPipe} from './users/search.pipe';
 import { AppRoutingModule } from './app-routing.module';
 import {TokenInterceptor} from './interceptor/interceptor.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import {PaginationService} from './pagination/pagination.service';
 import {PaginationComponent} from './pagination/pagination.component';
-import {SpinnerComponent} from './shared/spiner.component';
+import {SpinnerComponent} from './shared/spiner/spiner.component';
 
 
 @NgModule({

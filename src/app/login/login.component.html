@@ -12,7 +12,7 @@
                      id ="email"
                      placeholder="admin@mail.ru"
                      [(ngModel)]="email" name="email"
-              required>
+              required email>
             </div>
             <div class="form-group" >
               <label for= "password">Password </label>
@@ -20,16 +20,17 @@
                      class="form-control"
                      id ="password" placeholder="1A2b3456"
                      [(ngModel)]="password" name="password"
-              required>
+                     required>
 
             </div>
             <div >
-            <button class="btn btn-primary btn-block center-block"
+            <button type="submit" (click)="onSubmit()" class="btn btn-primary btn-block center-block"
                     [disabled]="form.invalid"
-                    [routerLink]="'/users'">  Login</button>
+                    >Login</button>
               </div>
           </form>
         </div>
+        <span class="center-align">{{statusMassage}}</span>
       </div>
     </div>
   </div>

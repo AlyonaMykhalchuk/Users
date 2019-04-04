@@ -11,7 +11,7 @@ import {Router} from '@angular/router';
 export class LoginComponent implements OnInit {
   email: string;
   password: string;
-
+  statusMassage: string = '';
 
   constructor (private authService: AuthService,
                private router: Router,
@@ -32,6 +32,12 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['/users']);
       })
       .catch( err => {
+        this.statusMassage = 'Wrong password or email!!!' + ' ' +
+          ''
+          + 'Hint:' + '' +
+          '' +
+          'Login:admin@mail.ru'
+          + ' ' + 'Password: 1A2b3456'
         console.log(err);
       });
 

@@ -14,3 +14,6 @@ input.ng-touched.ng-valid {
   padding-right: 150px;
 }
 
+span{
+  color: gray;
+}
